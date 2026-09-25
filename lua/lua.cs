@@ -1,3 +1,15 @@
+/// 						Produced by Wys.
+///
+/// 	You may not use the components of this class unless you appreciate
+/// 	suffering for hours, or, seek for a very fine and precise control over
+/// 	Lua.
+/// 	If that is the case, you may extend the class C in your component.
+/// 	Good luck!
+/// 	This work uses the Lua project: https://www.lua.org,
+/// 	and my own bindings (Lua2, for more information, search in source files!)
+/// 	For any documentations, its website stays the best source.
+/// 
+
 using System.Runtime.InteropServices;
 
 namespace luja.lua;
@@ -46,6 +58,12 @@ public class C
 	[DllImport(libname,  CallingConvention = CallingConvention.Cdecl)]
 	private static extern lua_String luaL_checklstring(lua_State state, int arg, nint psize);
 
+	[DllImport(libname,  CallingConvention = CallingConvention.Cdecl)]
+	private static extern int lua_getglobal(lua_State L, byte[] name);
+
+	[DllImport(libname,  CallingConvention = CallingConvention.Cdecl)]
+	private static extern int lua_getfield(lua_State L, int idx, byte[] k);
+
 	protected static lua_String luaL_checkstring(lua_State state, int arg)
 	{
 		return luaL_checklstring(state, arg, 0);
@@ -58,13 +76,19 @@ public class C
 	protected static extern int lua2_dofile(lua_State L, lua_String str);
 	
 	[DllImport(libname,  CallingConvention = CallingConvention.Cdecl)]
-	protected static extern int lua2_docall(lua_State L, lua_String name);
+	protected static extern int lua2_docall(lua_State L, int argc);
 
 	[DllImport(libname,  CallingConvention = CallingConvention.Cdecl)]
 	protected static extern int lua2_isboolean(lua_State L, int idx);
 
 	[DllImport(libname,  CallingConvention = CallingConvention.Cdecl)]
-	protected static extern int lua2_ismeta(lua_State L, lua_String name, int idx);
+	protected static extern void lua2_pushcfunction(lua_State L, lua_CFunction func);
+
+	[DllImport(libname,  CallingConvention = CallingConvention.Cdecl)]
+	protected static extern int lua_isuserdata(lua_State L, int idx);
+
+	[DllImport(libname,  CallingConvention = CallingConvention.Cdecl)]
+	protected static extern nint lua_checkmetatable(lua_State L, int idx, lua_String name);
 
 	[DllImport(libname,  CallingConvention = CallingConvention.Cdecl)]
 	protected static extern int lua_isinteger(lua_State L, int idx);
