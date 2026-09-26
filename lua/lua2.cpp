@@ -1,5 +1,5 @@
 /**
- * This file is recognized as a shared property of Wys.
+ * This file is the result of the hard works of Wys, belonging then to him.
  * You may use this file freely, as you wish, but you shall not
  * call this work as exclusively yours.
  * This file is free and open-source.
@@ -9,6 +9,7 @@
  * me at https://github.com/wys-prog.
  */
 
+#include <cstdint>
 #include "c/lua.hpp"
 
 #if defined(_WIN32) || defined(__CYGWIN__)
@@ -43,8 +44,8 @@ extern "C" {
     lua_newtable(L);
   }
 
-  LUA2 int lua2_docall(lua_State* L, int argc) {
-    lua_call(L, argc, LUA_MULTRET);
+  LUA2 void lua2_docall(lua_State* L, int nargs, int nresults) {
+    lua_call(L, nargs, nresults);
   }
 
   LUA2 int lua2_isboolean(lua_State* L, int idx) {
@@ -53,5 +54,23 @@ extern "C" {
 
   LUA2 void lua2_pushcfunction(lua_State* L, lua_CFunction func) {
     lua_pushcfunction(L, func);
+  }
+
+  LUA2 void lua2_openlibs(lua_State* L) {
+    luaL_openlibs(L);
+  }
+
+  LUA2 int lua2_getmetatable(lua_State* L, const char* tname) {
+    return luaL_getmetatable(L, tname);
+  }
+
+  LUA2 void lua2_newlib(lua_State* L, const luaL_Reg* funcs, int count) {
+    luaL_checkversion(L);
+    lua_createtable(L, 0, count);
+    luaL_setfuncs(L, funcs, 0);
+  }
+
+  LUA2 void* lua2_newuserdata(lua_State* L, uint64_t len) {
+    return lua_newuserdata(L, len);
   }
 }
