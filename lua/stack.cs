@@ -1,20 +1,12 @@
 using System;
 using System.Text;
+using System.Reflection;
 using Godot;
 
 namespace luja.lua;
 
 public class Stack: C
 {
-  private static void CreateMetatable(nint L, Type info)
-  {
-    C.luaL_newmetatable(L, info.FullName.ToUtf8Buffer());
-
-    /// Retreives the 1st argument K as a string,
-    /// - (Maybe?) checks for overloads and a given set of argument
-    /// -> Resolve and call (OR, maybe C# has this internally)
-  }
-
   public static void Push<T>(nint L, T v)
   {
     var type = v.GetType();
@@ -24,9 +16,14 @@ public class Stack: C
       C.lua_pushinteger(L, (lua_Integer)Activator.CreateInstance(typeof(lua_Integer), v));
     else if (type.IsAssignableTo(typeof(lua_Number))) 
       C.lua_pushnumber(L, (lua_Number)Activator.CreateInstance(typeof(lua_Number), v));
-    else if (type.GetType() == typeof(string))
+    else if (type == typeof(string))
       // Lua stack copies strings internally, and technically C# cannot move a string ... During a call. So ima abuse this.
       C.lua_pushstring(L, v.ToString().ToUtf8Buffer());
+    else if (type == typeof(lua_CFunction))
+    {
+      object v2 = v;
+      C.lua2_pushcfunction(L, (lua_CFunction)v2);
+    }
     else
     {
       unsafe

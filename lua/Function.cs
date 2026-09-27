@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace luja.lua;
 
-public class Function : C
+public class Function: C
 {
   protected static lua_CFunction From(Delegate deleg)
   {
@@ -12,13 +12,13 @@ public class Function : C
     return L =>
     {
       int pos = 1;
-      List<object> callargs = [];
+      var callargs = new List<object>(args.Length);
       foreach (var item in args)
       {
         callargs.Add(Stack.Get(L, pos++, item.ParameterType));
       }
 
-      var ret = deleg.DynamicInvoke([..callargs]);
+      var ret = deleg.DynamicInvoke([.. callargs]);
       if (ret != null)
       {
         Stack.Push(L, ret);
