@@ -31,7 +31,10 @@
  * as C-visible functions. For convention, we use lua2_<name> when the macro
  * name is lua_<name>, or luaL_<name>.
  */
-extern "C" {
+
+#include <iostream>
+
+ extern "C" {
   LUA2 int lua2_dostring(lua_State* L, const char* code) {
     return luaL_dostring(L, code);
   }
@@ -42,6 +45,10 @@ extern "C" {
 
   LUA2 void lua2_newtable(lua_State* L) {
     lua_newtable(L);
+  }
+
+  LUA2 lua_State* lua2_newstate() {
+    return luaL_newstate();
   }
 
   LUA2 void lua2_docall(lua_State* L, int nargs, int nresults) {

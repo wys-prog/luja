@@ -9,10 +9,14 @@ public class State: C
 {
   protected lua_State state;
 
-  public State(bool stdlua = true)
+  public State(bool allowExit = false, bool stdlua = true)
   {
-    state = C.lua_newstate();
+    state = C.lua2_newstate();
     if (stdlua) C.lua2_openlibs(state);
+    if (! allowExit)
+    {
+      DoString("os = os or {} ; os.exit = function(...) print('>>> exit rejected!') end");
+    }
   }
 
   public void LoadLibrary(string libname, Dictionary<string, lua_CFunction> funcs)
@@ -36,4 +40,10 @@ public class State: C
     _ = C.lua2_newlib(state, regs, regs.Length);
     C.lua_setfield(state, -1, libname);
   }
+
+  public bool DoString(string code) => C.lua2_dostring(state, code.ToUtf8Buffer()) != 0;
+  public bool DoString(byte[] code) => C.lua2_dostring(state, code) != 0;
+
+  public bool DoFile(string code) => C.lua2_dofile(state, code.ToUtf8Buffer()) != 0;
+  public bool DoFile(byte[] code) => C.lua2_dofile(state, code) != 0;
 }

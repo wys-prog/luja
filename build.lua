@@ -1,8 +1,8 @@
 local CC = os.getenv("CC") or "cc"
 local CXX = os.getenv("CXX") or "c++"
 
-local CCFLAGS = {}
-local CXXFLAGS = {}
+local CCFLAGS = {"-g"}
+local CXXFLAGS = {"-g"}
 local LDFLAGS = {}
 
 local is_windows = package.config:sub(1, 1) == "\\"

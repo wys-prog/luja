@@ -40,10 +40,7 @@ public class C
 	[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
 	public delegate int lua_CFunction(lua_State L);
 
-	public const string libname = "lua";
-
-	[DllImport(libname, CallingConvention = CallingConvention.Cdecl)]
-	protected static extern lua_State lua_newstate();
+	public const string libname = "./bin/liblua2";
 
 	[DllImport(libname, CallingConvention = CallingConvention.Cdecl)]
 	protected static extern void lua_pushinteger(lua_State state, lua_Integer num);
@@ -81,6 +78,9 @@ public class C
 	}
 
 	#region lua2
+
+	[DllImport(libname, CallingConvention = CallingConvention.Cdecl)]
+	protected static extern lua_State lua2_newstate();
 
 	[DllImport(libname, CallingConvention = CallingConvention.Cdecl)]
 	protected static extern int lua2_dostring(lua_State L, lua_String str);

@@ -8,6 +8,6 @@ public static class Machinery
 
   public static void Start()
   {
-    
+    state.DoString("os.exit()");
   }
 }
