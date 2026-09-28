@@ -28,6 +28,7 @@ public class Stack: C
     {
       unsafe
       {
+        // TODO: add __index, __newindex and __gc.
         nint datum = C.lua2_newuserdata(L, (ulong)sizeof(nint));
         Userdatum.Set(datum, v);
       }
