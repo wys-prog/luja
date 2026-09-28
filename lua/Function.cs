@@ -5,7 +5,7 @@ namespace luja.lua;
 
 public class Function: C
 {
-  protected static lua_CFunction From(Delegate deleg)
+  public static lua_CFunction From(Delegate deleg)
   {
     var args = deleg.Method.GetParameters();
     

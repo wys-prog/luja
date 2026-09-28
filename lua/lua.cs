@@ -18,10 +18,10 @@ namespace luja.lua;
 public class C
 {
 	[StructLayout(LayoutKind.Sequential)]
-	protected struct luaL_Reg
+	public struct luaL_Reg
 	{
-		byte[] name;
-		lua_CFunction func;
+		public byte[] name;
+		public lua_CFunction func;
 	}
 
 	protected enum Tenum
@@ -38,12 +38,12 @@ public class C
 	}
 
 	[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-	protected delegate int lua_CFunction(lua_State L);
+	public delegate int lua_CFunction(lua_State L);
 
 	public const string libname = "lua";
 
 	[DllImport(libname, CallingConvention = CallingConvention.Cdecl)]
-	protected static extern lua_State lua_newstate(lua_State state);
+	protected static extern lua_State lua_newstate();
 
 	[DllImport(libname, CallingConvention = CallingConvention.Cdecl)]
 	protected static extern void lua_pushinteger(lua_State state, lua_Integer num);
