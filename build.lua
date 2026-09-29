@@ -1,5 +1,5 @@
-local CC = os.getenv("CC") or "cc"
-local CXX = os.getenv("CXX") or "c++"
+local CC  = "gcc-16" --os.getenv("CC") or "cc"
+local CXX = "g++-16" --os.getenv("CXX") or "c++"
 
 local CCFLAGS = {"-g"}
 local CXXFLAGS = {"-g"}

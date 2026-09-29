@@ -80,4 +80,8 @@
   LUA2 void* lua2_newuserdata(lua_State* L, uint64_t len) {
     return lua_newuserdata(L, len);
   }
+
+  LUA2 void lua2_pop(lua_State* L, int n) {
+    lua_pop(L, n);
+  }
 }

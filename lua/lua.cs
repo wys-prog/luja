@@ -64,13 +64,16 @@ public class C
 	protected static extern lua_Number luaL_checknumber(lua_State state, int arg);
 
 	[DllImport(libname, CallingConvention = CallingConvention.Cdecl)]
-	private static extern lua_String luaL_checklstring(lua_State state, int arg, nint psize);
+	protected static extern lua_String luaL_checklstring(lua_State state, int arg, nint psize);
 
 	[DllImport(libname, CallingConvention = CallingConvention.Cdecl)]
-	private static extern int lua_getglobal(lua_State L, byte[] name);
+	protected static extern int lua_getglobal(lua_State L, byte[] name);
 
 	[DllImport(libname, CallingConvention = CallingConvention.Cdecl)]
-	private static extern int lua_getfield(lua_State L, int idx, byte[] k);
+	protected static extern int lua_getfield(lua_State L, int idx, byte[] k);
+
+	[DllImport(libname, CallingConvention = CallingConvention.Cdecl)]
+	protected static extern void lua_pop(lua_State L, int n);
 
 	protected static lua_String luaL_checkstring(lua_State state, int arg)
 	{
@@ -143,4 +146,7 @@ public class C
 
 	[DllImport(libname, CallingConvention = CallingConvention.Cdecl)]
 	protected static extern int lua_type(lua_State L, int idx);
+
+	[DllImport(libname, CallingConvention = CallingConvention.Cdecl)]
+	protected static extern void lua_close(lua_State L);
 }
