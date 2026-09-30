@@ -11,6 +11,7 @@
 ///   For any documentations, its website stays the best source.
 /// 
 
+using System;
 using System.Runtime.InteropServices;
 
 namespace luja.lua;
@@ -149,4 +150,7 @@ public class C
 
 	[DllImport(libname, CallingConvention = CallingConvention.Cdecl)]
 	protected static extern void lua_close(lua_State L);
+
+	[DllImport(libname, CallingConvention = CallingConvention.Cdecl)]
+  protected static extern void lua2_remove(nint state, int v);
 }

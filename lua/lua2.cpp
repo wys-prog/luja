@@ -81,7 +81,12 @@
     return lua_newuserdata(L, len);
   }
 
+
   LUA2 void lua2_pop(lua_State* L, int n) {
     lua_pop(L, n);
+  }
+
+  LUA2 void lua2_remove(lua_State* L, int idx) {
+    lua_remove(L, idx);
   }
 }
