@@ -365,5 +365,7 @@ metadata/_custom_type_script = "uid://bgdyu3khnmxwm"
 
 [node name="animation" type="AnimatedSprite2D" parent="." unique_id=732660764]
 sprite_frames = SubResource("SpriteFrames_jk4cl")
-animation = &"go_up"
-frame_progress = 0.40961483
+animation = &"idle_down"
+frame_progress = 0.58270735
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=427988228]

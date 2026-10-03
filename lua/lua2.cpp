@@ -34,7 +34,9 @@
 
 #include <iostream>
 
- extern "C" {
+extern "C" {
+  LUA2 void lua2_debug_string(const char*);
+
   LUA2 int lua2_dostring(lua_State* L, const char* code) {
     return luaL_dostring(L, code);
   }
@@ -81,12 +83,20 @@
     return lua_newuserdata(L, len);
   }
 
-
   LUA2 void lua2_pop(lua_State* L, int n) {
     lua_pop(L, n);
   }
 
   LUA2 void lua2_remove(lua_State* L, int idx) {
     lua_remove(L, idx);
+  }
+
+  LUA2 const char* lua2_tostring(lua_State* L, int idx) {
+    return lua_tostring(L, idx);
+  }
+
+  LUA2 void lua2_debug_string(const char* p) {
+    std::cout << "p (start):  \e[0;35m" << (uintptr_t)p << "\e[0m" << std::endl;
+    std::cout << "p (string): \e[0;36m" << p << "\e[0m" << std::endl;
   }
 }

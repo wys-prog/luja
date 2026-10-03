@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Godot;
 using luja.lua;
 
 namespace luja.Components;
@@ -25,6 +26,11 @@ public static class Machinery
     return [..types];
   }
 
+  private static string Foo(string FOOLING)
+  {
+    return $"{FOOLING}... WHAT???";
+  }
+
   public static Type[] GetTypesDerivedOf<T>()
    => [..GetTypes().Where(type => type.IsSubclassOf(typeof(T)))];
   
@@ -32,8 +38,11 @@ public static class Machinery
   public static void Start()
   {
     var types = GetTypesDerivedOf<Component>();
-    foreach (var type in types)
+
+    state.Push("System.foo", Function.From(Foo));
+    if (! state.DoString("print('System.foo:', System.foo())"))
     {
+      GD.Print(state.ToString(-1));
       
     }
   }

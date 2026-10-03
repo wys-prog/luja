@@ -11,17 +11,16 @@
 ///   For any documentations, its website stays the best source.
 /// 
 
-using System;
 using System.Runtime.InteropServices;
 
 namespace luja.lua;
 
-public class C
+public unsafe class C
 {
 	[StructLayout(LayoutKind.Sequential)]
 	public struct luaL_Reg
 	{
-		public byte[] name;
+		public nint name;
 		public lua_CFunction func;
 	}
 
@@ -74,7 +73,7 @@ public class C
 	protected static extern int lua_getfield(lua_State L, int idx, byte[] k);
 
 	[DllImport(libname, CallingConvention = CallingConvention.Cdecl)]
-	protected static extern void lua_pop(lua_State L, int n);
+	protected static extern void lua2_pop(lua_State L, int n);
 
 	protected static lua_String luaL_checkstring(lua_State state, int arg)
 	{
@@ -116,7 +115,13 @@ public class C
 	[DllImport(libname, CallingConvention = CallingConvention.Cdecl)]
 	protected static extern nint lua2_newuserdata(lua_State L, System.UInt64 len);
 
+	[DllImport(libname, CallingConvention = CallingConvention.Cdecl)]
+	protected static extern byte* lua2_tostring(lua_State L, int idx);
+
 	#endregion
+
+	[DllImport(libname, CallingConvention = CallingConvention.Cdecl)]
+	protected static extern byte[] lua_tolstring(lua_State L, int idx, nint psize);
 
 	[DllImport(libname, CallingConvention = CallingConvention.Cdecl)]
 	protected static extern int luaL_setmetatable(lua_State L, byte[] tname);
@@ -153,4 +158,13 @@ public class C
 
 	[DllImport(libname, CallingConvention = CallingConvention.Cdecl)]
   protected static extern void lua2_remove(nint state, int v);
+
+	[DllImport(libname, CallingConvention = CallingConvention.Cdecl)]
+  protected static extern void lua_pushvalue(nint state, int idx);
+
+	[DllImport(libname, CallingConvention = CallingConvention.Cdecl)]
+  protected static extern void lua_setglobal(nint state, byte[] name);
+
+	[DllImport(libname, CallingConvention = CallingConvention.Cdecl)]
+  public static extern void lua2_debug_string(byte[] name);
 }
