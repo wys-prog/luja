@@ -10,19 +10,8 @@
  */
 
 #include <cstdint>
-#include "c/lua.hpp"
-
-#if defined(_WIN32) || defined(__CYGWIN__)
-#  if defined(__GNUC__) || defined(__clang__)
-#    define LUA2 __attribute__((dllexport))
-#  else
-#    define LUA2 __declspec(dllexport)
-#  endif
-#elif defined(__GNUC__) || defined(__clang__)
-#  define LUA2 __attribute__((visibility("default")))
-#else
-#  define LUA2
-#endif
+#include "../c/lua.hpp"
+#include "lua2exp.hpp"
 
 /**
  * LUA2 is simply a dummy C interface that internally calls Lua's C API.
@@ -89,6 +78,10 @@ extern "C" {
 
   LUA2 void lua2_remove(lua_State* L, int idx) {
     lua_remove(L, idx);
+  }
+
+  LUA2 lua_Number lua2_tonumber(lua_State* L, int idx) {
+    return lua_tonumber(L, idx);
   }
 
   LUA2 const char* lua2_tostring(lua_State* L, int idx) {

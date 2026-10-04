@@ -9,7 +9,7 @@ namespace luja.Components;
 
 public static class Machinery
 {
-  private static readonly State state = new();
+  public static readonly State state = new();
 
   public static Assembly[] GetAssemblies()
   {
@@ -26,24 +26,18 @@ public static class Machinery
     return [..types];
   }
 
-  private static string Foo(string FOOLING)
-  {
-    return $"{FOOLING}... WHAT???";
-  }
-
   public static Type[] GetTypesDerivedOf<T>()
    => [..GetTypes().Where(type => type.IsSubclassOf(typeof(T)))];
-  
 
   public static void Start()
   {
     var types = GetTypesDerivedOf<Component>();
 
-    state.Push("System.foo", Function.From(Foo));
-    if (! state.DoString("print('System.foo:', System.foo())"))
+    state.Push("System.Gift", Function.From((string A) =>
     {
-      GD.Print(state.ToString(-1));
-      
-    }
+      GD.Print(A);
+    }));
   }
+
+  public static bool Do(string code) => state.DoString(code);
 }

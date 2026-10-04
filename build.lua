@@ -179,7 +179,8 @@ local lua_source = {
 }
 
 local lua2_source = {
-  "lua/lua2.cpp",
+  "lua/cxx/lua2.cpp",
+  "lua/cxx/debug.cpp",
 }
 
 parse_args()

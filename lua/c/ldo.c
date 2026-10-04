@@ -121,8 +121,9 @@ void luaD_seterrorobj (lua_State *L, TStatus errcode, StkId oldtop) {
   L->top.p = oldtop + 1;  /* top goes back to old top plus error object */
 }
 
+extern void lua2_dumpstdout(lua_State* L, int32_t colors);
 
-l_noret luaD_throw (lua_State *L, TStatus errcode) {
+void luaD_throw (lua_State *L, TStatus errcode) {
   if (L->errorJmp) {  /* thread has an error handler? */
     L->errorJmp->status = errcode;  /* set status */
     LUAI_THROW(L, L->errorJmp);  /* jump to it */
@@ -141,7 +142,6 @@ l_noret luaD_throw (lua_State *L, TStatus errcode) {
         lua_unlock(L);
         g->panic(L);  /* call panic function (last chance to jump out) */
       }
-      abort();
     }
   }
 }
