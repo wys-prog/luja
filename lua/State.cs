@@ -11,6 +11,8 @@ namespace luja.lua;
 public class State : C, IDisposable
 {
   protected lua_State state;
+  public Stack Stack { get; protected set; }
+
   private const StringSplitOptions splitOptions = StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries;
 
   private void PushPath(string path, bool createMissing = false)
@@ -72,7 +74,7 @@ public class State : C, IDisposable
 
     if (lastPoint < 0)
     {
-      Stack.Push<T>(state, value);
+      Stack.Push(state, value);
       C.lua_setglobal(state, C.PtrOf(path.ToAsciiBuffer()));
       return;
     }
@@ -81,7 +83,7 @@ public class State : C, IDisposable
     var name = path[(lastPoint + 1)..];
 
     PushPath(way, true);
-    Stack.Push<T>(state, value);
+    Stack.Push(state, value);
     C.lua_setfield(state, -2, C.PtrOf(name.ToAsciiBuffer()));
   }
 
@@ -93,38 +95,15 @@ public class State : C, IDisposable
     {
       DoString("os = os or {} ; os.exit = function(...) print('>>> exit rejected!') end");
     }
+
+    Stack = new(this);
   }
 
-  public unsafe void LoadLibrary(string libname, Dictionary<string, lua_CFunction> funcs)
+  public void LoadLibrary(string libname, Dictionary<string, lua_CFunction> funcs)
   {
-    List<C.luaL_Reg> regs = [];
-    List<nint> allocatedNames = [];
+    PushPath(libname, true);
 
-    foreach (var item in funcs)
-    {
-      byte[] bytes = item.Key.ToAsciiBuffer();
-
-      nint namePtr = Marshal.AllocHGlobal(bytes.Length);
-      Marshal.Copy(bytes, 0, namePtr, bytes.Length);
-      allocatedNames.Add(namePtr);
-
-      var reg = new C.luaL_Reg
-      {
-        name = (byte*)namePtr,
-        func = item.Value
-      };
-
-      regs.Add(reg);
-    }
-
-    PushPath(libname);
-    C.luaL_Reg[] arr = [.. regs];
-
-    C.lua2_newlib(state, C.PtrOf(arr), regs.Count);
-
-    foreach (nint ptr in allocatedNames) Marshal.FreeHGlobal(ptr);
-
-    C.lua_setfield(state, -1, C.PtrOf(libname.ToAsciiBuffer()));
+    foreach (var kv in funcs) Push(libname + "." + kv.Key, kv.Value);
   }
 
   // Unlike what people who doesn't know how to use Lua's C API, we DO NOT need to temporalize or pin the given managed buffer
@@ -132,11 +111,38 @@ public class State : C, IDisposable
   // Even if you call a C# function, this would move internal references, and so, invalidate the callee ... Which would not make
   // sense.
 
-  public unsafe bool DoString(string code) => C.lua2_dostring(state, (nint)C.PtrOf(code.ToAsciiBuffer())) == 0;
-  public unsafe bool DoString(byte[] code) => C.lua2_dostring(state, (nint)C.PtrOf(code)) == 0;
+  public unsafe void DoString(string code)
+  {
+    if (C.lua2_dostring(state, (nint)C.PtrOf(code.ToAsciiBuffer())) != 0)
+    {
+      throw new Exception(ToString(-1));
+    }
+  }
 
-  public unsafe bool DoFile(string code) => C.lua2_dofile(state, (nint)C.PtrOf(code.ToAsciiBuffer())) == 0;
-  public unsafe bool DoFile(byte[] code) => C.lua2_dofile(state, (nint)C.PtrOf(code)) == 0;
+  public unsafe void DoString(byte[] code)
+  {
+    if (C.lua2_dostring(state, (nint)C.PtrOf(code)) != 0)
+    {
+      throw new Exception(ToString(-1));
+    }
+  }
+
+  public unsafe void DoFile(string code)
+  {
+    if (C.lua2_dofile(state, (nint)C.PtrOf(code.ToAsciiBuffer())) != 0)
+    {
+      throw new Exception(ToString(-1));
+    }
+  }
+
+  public unsafe void DoFile(byte[] code)
+  {
+    if (C.lua2_dofile(state, (nint)C.PtrOf(code)) != 0)
+    {
+      throw new Exception(ToString(-1));
+    }
+  }
+
 
   public string ToString(int idx)
   {
@@ -154,4 +160,6 @@ public class State : C, IDisposable
       state = 0;
     }
   }
+
+  public nint Native() => state;
 }

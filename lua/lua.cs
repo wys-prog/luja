@@ -42,7 +42,7 @@ public unsafe class C
 	public delegate int lua_CFunction(lua_State L);
 	[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
 
-	public delegate Int32 lua2_StreamWrite(byte* s, Int32 len);
+	public delegate Int32 lua2_StreamWritter(byte* s, UInt32 len);
 
 	public const string libname = "./bin/liblua2";
 
@@ -173,7 +173,7 @@ public unsafe class C
   public static extern void lua2_debug_string(byte* name);
 
 	[DllImport(libname, CallingConvention = CallingConvention.Cdecl)]
-  public static extern void lua2_dump(lua_State L, Int32 colors, Int32 chunksz, lua2_StreamWrite writter);
+  public static extern void lua2_dump(lua_State L, Int32 colors, UInt32 chunksz, lua2_StreamWritter writter);
 
 	[DllImport(libname, CallingConvention = CallingConvention.Cdecl)]
   public static extern void lua2_dumpstdout(lua_State L, Int32 colors);

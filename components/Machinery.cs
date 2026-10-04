@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Godot;
+using luja.Debug;
 using luja.lua;
 
 namespace luja.Components;
 
 public static class Machinery
 {
-  public static readonly State state = new();
+  public static readonly State State = new();
 
   public static Assembly[] GetAssemblies()
   {
@@ -32,12 +33,5 @@ public static class Machinery
   public static void Start()
   {
     var types = GetTypesDerivedOf<Component>();
-
-    state.Push("System.Gift", Function.From((string A) =>
-    {
-      GD.Print(A);
-    }));
   }
-
-  public static bool Do(string code) => state.DoString(code);
 }

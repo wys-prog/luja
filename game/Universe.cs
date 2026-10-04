@@ -11,13 +11,6 @@ public partial class Universe : Node
 	{
 		Machinery.Start();
 
-		var provider = Function.From((object o) =>
-		{
-			GD.Print($"o: {o} ({o.GetType().FullName})");
-		});
-
-		Machinery.state.Push("ProvideCSharp", provider);
-		if (! Machinery.Do("ProvideCSharp(System.Gift)")) throw new System.Exception(Machinery.state.ToString(-1));
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
